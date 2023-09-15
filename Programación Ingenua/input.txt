@@ -1,0 +1,23 @@
+3
+"Calculo",3
+"Programacion Funcional",4
+"Sistemas Operativos",2
+5
+"Alan Turing",3
+"Calculo",5
+"Programacion Funcional",2
+"Sistemas Operativos",1
+"Ada Lovelace",3
+"Calculo",4
+"Programacion Funcional",1
+"Sistemas Operativos",3 
+"Tim Berners-Lee",2
+"Programacion Funcional",3
+"Sistemas Operativos",2
+"Donald Knuth",2
+"Calculo",2
+"Programacion Funcional",3
+"Linus Torvalds",3
+"Calculo",3
+"Programacion Funcional",2
+"Sistemas Operativos",3

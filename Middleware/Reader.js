@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-function readData() {
+function Reader() {
   try {
     const filePath = path.join(__dirname,  'input.txt'); // Ruta relativa a input.txt
     const contenido = fs.readFileSync(filePath, 'utf-8');
@@ -64,4 +64,4 @@ function readData() {
   }
 }
 
-module.exports = { readData };
+module.exports = { Reader };

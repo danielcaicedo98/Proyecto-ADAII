@@ -1,6 +1,7 @@
-const { readData } = require("../Middleware/Reader.js");
+const { Reader } = require("../Middleware/Reader");
 
-const data = readData();
+
+const data = Reader();
 if (data) {
   const materiasJSON = data.materias;
   const estudiantesJSON = data.estudiantes;

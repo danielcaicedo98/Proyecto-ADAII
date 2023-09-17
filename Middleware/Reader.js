@@ -20,10 +20,8 @@ function Reader() {
       materiasJSON.materias.push({ Nombre: materia[0], Cupos: parseInt(materia[1]) });
     }
 
-    const numero_estudiantes = contenido_l[numero_materias + 1].trim();
-    const elementos = numero_estudiantes.split(',');
-    let index = 1;
-    let index_materias = 0;
+    const numero_estudiantes = contenido_l[numero_materias + 1].trim();   
+    let index = 1;   
     let posicion_a = numero_materias + 2;
 
     // Objeto JSON para almacenar los estudiantes
@@ -48,10 +46,7 @@ function Reader() {
       materias_estudiante = [];
       index += 1;
     }
-    console.log( materiasJSON)
-    console.log( 'hola')
-
-
+   
     // Devuelve los objetos JSON con los datos procesados
     return { materias: materiasJSON, estudiantes: estudiantesJSON };
   } catch (error) {

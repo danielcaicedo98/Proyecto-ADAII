@@ -7,4 +7,5 @@ if (data) {
   const estudiantesJSON = data.estudiantes;
   console.log(materiasJSON);
   console.log(estudiantesJSON);
+  console.log(estudiantesJSON.estudiantes[0]);
 }

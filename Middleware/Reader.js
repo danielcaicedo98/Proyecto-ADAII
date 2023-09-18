@@ -17,7 +17,7 @@ function Reader() {
     // Organiza las materias que están en el archivo y las coloca en el objeto JSON
     for (let i = 1; i <= numero_materias; i++) {
       const materia = contenido_l[i].trim().split(',');
-      materiasJSON.materias.push({ Nombre: materia[0], Cupos: parseInt(materia[1]) });
+      materiasJSON.materias.push({ nombre: materia[0], cupos: parseInt(materia[1]) });
     }
 
     const numero_estudiantes = parseInt(contenido_l[numero_materias + 1].trim());   
@@ -36,12 +36,12 @@ function Reader() {
       }
       let estudiante = contenido_l[posicion_a].trim().split(',');
       let numero_materias = parseInt(estudiante[1]);
-      let materias_estudiante = [];
+      let materias_estudiantes = [];
       for (let i = posicion_a + 1; i <= numero_materias + posicion_a; i++) {
         const materia_estudiante = contenido_l[i].trim().split(',');
-        materias_estudiante.push({ Nombre_materia: materia_estudiante[0], Prioridad: parseInt(materia_estudiante[1]) });
+        materias_estudiantes.push({ nombre_materia: materia_estudiante[0], prioridad: parseInt(materia_estudiante[1]) });
       }
-      estudiantesJSON.estudiantes.push({ Nombre: estudiante[0], Numero_materias: numero_materias, Materias_estudiante: materias_estudiante });
+      estudiantesJSON.estudiantes.push({ nombre: estudiante[0], numero_materias: numero_materias, materias_estudiante: materias_estudiantes });
       posicion_a = numero_materias + posicion_a + 1;
       materias_estudiante = [];
       index += 1;

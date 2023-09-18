@@ -20,7 +20,7 @@ function Reader() {
       materiasJSON.materias.push({ Nombre: materia[0], Cupos: parseInt(materia[1]) });
     }
 
-    const numero_estudiantes = contenido_l[numero_materias + 1].trim();   
+    const numero_estudiantes = parseInt(contenido_l[numero_materias + 1].trim());   
     let index = 1;   
     let posicion_a = numero_materias + 2;
 

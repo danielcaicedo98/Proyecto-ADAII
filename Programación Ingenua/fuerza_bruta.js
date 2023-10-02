@@ -1,56 +1,61 @@
 const { ReaderBr } = require("../Middleware/reader_br");
 const fs = require("fs");
-function generarVariaciones(materias, variacionActual, indice, variaciones) {
+let mejorVariacion = [];
+function generarVariaciones(
+	materias,
+	variacionActual,
+	indice,
+	todasLasMaterias
+) {
 	// Si hemos llegado al final de la lista de materias, agregamos la variaciónActual al array de variaciones.
 	if (indice === materias.length) {
-		variaciones.push(variacionActual.map((materia) => ({ ...materia }))); // Copiamos todas las materias para evitar que se modifiquen.
+		const insActualVariacion = calcularInstatisfaccion(variacionActual);
+		const insMejorVariacion = calcularInstatisfaccion(mejorVariacion);
+		if (insActualVariacion < insMejorVariacion) {
+			mejorVariacion = variacionActual.map((materia) => ({
+				...materia,
+			}));
+		}
 	} else {
-		// Cambiamos el estado de la materia a "Aprobada" y recursivamente generamos las variaciones.
+		// Cambiamos el estado de la materia a "asignada" y recursivamente generamos las variaciones.
 		variacionActual[indice].asignada = true;
-		generarVariaciones(materias, variacionActual, indice + 1, variaciones);
+		const valida = esValida(variacionActual, todasLasMaterias);
+		if (valida) {
+			generarVariaciones(
+				materias,
+				variacionActual,
+				indice + 1,
+				todasLasMaterias
+			);
+		}
 
-		// Cambiamos el estado de la materia a "No Aprobada" y recursivamente generamos las variaciones.
+		// Cambiamos el estado de la materia a "No asignada" y recursivamente generamos las variaciones.
 		variacionActual[indice].asignada = false;
-		generarVariaciones(materias, variacionActual, indice + 1, variaciones);
+		generarVariaciones(materias, variacionActual, indice + 1, todasLasMaterias);
 	}
 }
 
-// Función para generar todas las variaciones posibles.
-function obtenerTodasLasVariaciones(materias) {
-	const variaciones = [];
-	const variacionInicial = materias.map((materia) => ({ ...materia })); // Copiamos todas las materias para iniciar.
-
-	generarVariaciones(materias, variacionInicial, 0, variaciones);
-
-	return variaciones;
+/** Función para generar todas las variaciones posibles e ir calculando la solución más optima*/
+function calcularMejorSolucion(materiasSolicitadas, todasLasMaterias) {
+	const variacionInicial = materiasSolicitadas.map((materia) => ({
+		...materia,
+	})); // Copiamos todas las materias para iniciar.
+	mejorVariacion = materiasSolicitadas.map((materia) => ({
+		...materia,
+	}));
+	//va generando variaciones y a medida que las genera va calculando cual es mejor
+	generarVariaciones(
+		materiasSolicitadas,
+		variacionInicial,
+		0,
+		todasLasMaterias
+	);
+	console.log("mejor variacion", calcularInstatisfaccion(mejorVariacion));
+	return mejorVariacion;
 }
-// Ejemplo de uso:
-const materias = [
-	{
-		nombre_materia: "101",
-		prioridad: 4,
-		cod_estudiante: "1007",
-		asignada: false,
-	},
-	{
-		nombre_materia: "102",
-		prioridad: 3,
-		cod_estudiante: "1004",
-		asignada: false,
-	},
-	{
-		nombre_materia: "102",
-		prioridad: 5,
-		cod_estudiante: "1004",
-		asignada: false,
-	},
-];
 
-function esValida(variacion = [], materias) {
-	// let todasNoAsignadas = variacion.every((v) => v.asignada);
-	// if (todasNoAsignadas) {
-	// 	return console.log("todas en verdadero");
-	// }
+/** mira que la variación no exceda el cupo de las materias*/
+function esValida(variacion = [], materias = []) {
 	let valida = true;
 	const cuposPorMateria = {};
 	materias.forEach((m) => {
@@ -60,7 +65,6 @@ function esValida(variacion = [], materias) {
 	variacion.forEach((ms) => {
 		let cuposDisponibles = cuposPorMateria[ms.nombre_materia];
 		if (ms.asignada) {
-			// console.log(cuposDisponibles, ms.nombre_materia);
 			if (cuposDisponibles > 0) {
 				cuposPorMateria[ms.nombre_materia] =
 					cuposPorMateria[ms.nombre_materia] - 1;
@@ -68,9 +72,8 @@ function esValida(variacion = [], materias) {
 				valida = false;
 			}
 		}
-		//materias solicitadas
 	});
-	// console.log("es valida ", variacion, cuposPorMateria, valida);
+
 	return valida;
 }
 function γ(x) {
@@ -107,12 +110,7 @@ function calcularInstatisfaccion(variacion) {
 			prioridadASumar = materiaS.prioridad;
 			maASumar = 0;
 		}
-		// console.log(indice);
-		// if (estudiantes[indice] == undefined) {
-		// 	estudiantes[indice]["ma"] = 0;
-		// 	estudiantes[indice]["prioridadTotalRec"] = 0;
-		// 	estudiantes[indice]["ms"] = 0;
-		// }
+
 		estudiantes[indice] = {
 			ma: estudiantes[indice]["ma"] + maASumar,
 			prioridadTotalRec:
@@ -125,9 +123,7 @@ function calcularInstatisfaccion(variacion) {
 	const insatisfacciones = estudiantes.map((e) => {
 		return (1 - e.ma / e.ms) * (e.prioridadTotalRec / γ(e.ms));
 	});
-	// console.log(
-	// 	insatisfacciones.reduce((a, b) => a + b, 0) / insatisfacciones.length
-	// );
+
 	return insatisfacciones.reduce((a, b) => a + b, 0) / insatisfacciones.length; //promedio de insatisfacciones
 }
 const data = ReaderBr();
@@ -141,26 +137,17 @@ if (data) {
 		"Materias :",
 		data.materias.materias.map((m) => [m.nombre, m.cupos])
 	);
-	console.log("solicitadas", materiasSolicitadas.length);
+	console.log("solicitudes", materiasSolicitadas.length);
 
-	const todasLasVariaciones = obtenerTodasLasVariaciones(materiasSolicitadas);
-	// variaciones que no exceden el cupo de las materias
-	const variacionesValidas = todasLasVariaciones.filter((variacion) => {
-		return esValida(variacion, todasLasMaterias);
-	});
+	const mejorSolucion = calcularMejorSolucion(
+		materiasSolicitadas,
+		todasLasMaterias
+	);
 
-	console.log("combinaciones validas", variacionesValidas.length);
-	const insatisfaccionesTotales = variacionesValidas.map((variacion) => {
-		return calcularInstatisfaccion(variacion);
-	});
-	console.log(Math.min(...insatisfaccionesTotales));
-
-	//calcularInstatisfaccion(variacionesValidas[0]);
-	// console.log("variaciones", todasLasVariaciones.length);
-	// console.log("validas", variacionesValidas.length);
-	// console.log(
-	// 	typeof materiasSolicitadas,
-	// 	materiasSolicitadas.map((m) => m.cod_estudiante)
-	// );
-	// console.log(todasLasMaterias, todasLasVariaciones[0]);
+	console.log("estudiante   materia asignada");
+	mejorSolucion
+		.filter((m) => m.asignada)
+		.forEach((m) => {
+			console.log(m.cod_estudiante, m.nombre_materia);
+		});
 }

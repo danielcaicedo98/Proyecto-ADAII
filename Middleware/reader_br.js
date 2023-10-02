@@ -3,7 +3,7 @@ const fs = require("fs");
 
 function ReaderBr() {
 	try {
-		const filePath = path.join(__dirname, "input0.txt"); // Ruta relativa a input.txt
+		const filePath = path.join(__dirname, "e_3_5_5.roc"); // Ruta relativa a input.txt
 		const contenido = fs.readFileSync(filePath, "utf-8");
 		const contenido_l = contenido.split("\n");
 		const numero_materias = parseInt(contenido_l[0].trim());

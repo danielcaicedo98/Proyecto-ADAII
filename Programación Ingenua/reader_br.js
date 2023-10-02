@@ -1,10 +1,10 @@
-const path = require("path");
-const fs = require("fs");
+import { join } from "node:path";
+import { readFileSync } from "node:fs";
 
-function ReaderBr() {
+export function ReaderBr() {
 	try {
-		const filePath = path.join(__dirname, "e_3_5_5.roc"); // Ruta relativa a input.txt
-		const contenido = fs.readFileSync(filePath, "utf-8");
+		const filePath = "../Middleware/e_11_10_5.roc"; //join("./", "e_3_5_5.roc"); // Ruta relativa a input.txt
+		const contenido = readFileSync(filePath, "utf-8");
 		const contenido_l = contenido.split("\n");
 		const numero_materias = parseInt(contenido_l[0].trim());
 
@@ -58,7 +58,7 @@ function ReaderBr() {
 				materias_estudiante: materias_estudiantes,
 			});
 			posicion_a = numero_materias + posicion_a + 1;
-			materias_estudiante = [];
+			// materias_estudiante = [];
 			index += 1;
 		}
 
@@ -73,5 +73,3 @@ function ReaderBr() {
 		return null;
 	}
 }
-
-module.exports = { ReaderBr };

@@ -1,5 +1,5 @@
-const { ReaderBr } = require("../Middleware/reader_br");
-const fs = require("fs");
+import { ReaderBr } from "./reader_br.js";
+// const fs = require("fs");
 let mejorVariacion = [];
 function generarVariaciones(
 	materias,

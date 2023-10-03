@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Taller 1 - ADAII</title>
+</head>
+
+<body>
+    <div class="contenedor">
+        <h1>Taller 1 - ADAII</h1>
+        <textarea id="textoEntrada" class="textareaPersonalizado" rows="10" cols="50"></textarea>
+        <button onclick="calcular()" class="botonCalcular">Calcular</button>
+        <br>
+        <p id="cargando"></p>
+    </div>
+
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .contenedor {
+            text-align: center;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .textareaPersonalizado {
+            width: 100%;
+            height: 50vh;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .botonCalcular {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .botonCalcular:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script>
+        async function calcular() {
+            const textoEntrada = document.getElementById('textoEntrada').value;
+
+            try {
+                document.querySelector("#cargando").innerHTML = 'Cargando...';
+                const respuesta = await fetch('/roc_fb', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    body: textoEntrada,
+                });
+                document.querySelector("#cargando").innerHTML = '';
+
+
+                if (respuesta.ok) {
+                    const contenido = await respuesta.text();
+
+                    // Abrir el contenido en una nueva pestaña
+                    const nuevaPestana = window.open();
+                    nuevaPestana.document.write('<pre>' + contenido + '</pre>');
+                } else {
+                    console.error('Error en la solicitud:', respuesta.statusText);
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

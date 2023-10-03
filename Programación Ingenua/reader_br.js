@@ -1,9 +1,9 @@
-import { join } from "node:path";
-import { readFileSync } from "node:fs";
+const { join } = require("path");
+const { readFileSync } = require("fs");
 
-export function ReaderBr() {
+function ReaderBr(nombreArchivo) {
 	try {
-		const filePath = "../Middleware/e_11_10_5.roc"; //join("./", "e_3_5_5.roc"); // Ruta relativa a input.txt
+		const filePath = "./entradas/entrada.txt"; //join("./", "e_3_5_5.roc"); // Ruta relativa a input.txt
 		const contenido = readFileSync(filePath, "utf-8");
 		const contenido_l = contenido.split("\n");
 		const numero_materias = parseInt(contenido_l[0].trim());
@@ -73,3 +73,5 @@ export function ReaderBr() {
 		return null;
 	}
 }
+
+module.exports = ReaderBr;

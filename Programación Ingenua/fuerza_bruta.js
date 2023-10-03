@@ -1,6 +1,7 @@
-import { ReaderBr } from "./reader_br.js";
-// const fs = require("fs");
+const ReaderBr = require("./reader_br");
+const fs = require("fs");
 let mejorVariacion = [];
+let running = false;
 function generarVariaciones(
 	materias,
 	variacionActual,
@@ -44,12 +45,14 @@ function calcularMejorSolucion(materiasSolicitadas, todasLasMaterias) {
 		...materia,
 	}));
 	//va generando variaciones y a medida que las genera va calculando cual es mejor
+	running = true;
 	generarVariaciones(
 		materiasSolicitadas,
 		variacionInicial,
 		0,
 		todasLasMaterias
 	);
+	running = false;
 	console.log("mejor variacion", calcularInstatisfaccion(mejorVariacion));
 	return mejorVariacion;
 }
@@ -123,13 +126,22 @@ function calcularInstatisfaccion(variacion) {
 	const insatisfacciones = estudiantes.map((e) => {
 		return (1 - e.ma / e.ms) * (e.prioridadTotalRec / γ(e.ms));
 	});
-
-	return insatisfacciones.reduce((a, b) => a + b, 0) / insatisfacciones.length; //promedio de insatisfacciones
+	const insandest = estudiantes.map((e) => {
+		return {
+			ins: (1 - e.ma / e.ms) * (e.prioridadTotalRec / γ(e.ms)),
+			cod: e.cod_estudiante,
+		};
+	});
+	const total =
+		insatisfacciones.reduce((a, b) => a + b, 0) / insatisfacciones.length;
+	if (total.toFixed(3) === "0.031" && !running) {
+		console.log("Insatisfacciones", insandest);
+	}
+	return total; //promedio de insatisfacciones
 }
-const data = ReaderBr();
-if (data) {
-	const todosLosEstudiantes = data.estudiantes;
-	const todasLasMaterias = data.materias.materias;
+function rocFB(todasLasMaterias, todosLosEstudiantes) {
+	const data = ReaderBr();
+
 	let materiasSolicitadas = todosLosEstudiantes.estudiantes.flatMap((est) => {
 		return est.materias_estudiante;
 	});
@@ -144,10 +156,30 @@ if (data) {
 		todasLasMaterias
 	);
 
-	console.log("estudiante   materia asignada");
-	mejorSolucion
-		.filter((m) => m.asignada)
-		.forEach((m) => {
-			console.log(m.cod_estudiante, m.nombre_materia);
-		});
+	let respuestaEnTexto = "78\n";
+	let actualEstudiante = mejorSolucion[0].cod_estudiante;
+	let materiasAsignadas = [];
+	mejorSolucion.forEach((m) => {
+		if (m.cod_estudiante == actualEstudiante) {
+			materiasAsignadas.push(m);
+		} else {
+			respuestaEnTexto += `${m.cod_estudiante},${materiasAsignadas.length}\n`;
+			materiasAsignadas.forEach((m) => {
+				respuestaEnTexto += `${m.nombre_materia}\n`;
+			});
+			materiasAsignadas = [];
+			actualEstudiante = m.cod_estudiante;
+			materiasAsignadas.push(m);
+		}
+	});
+	fs.writeFileSync("salidas/salida.txt", respuestaEnTexto);
 }
+
+const data = ReaderBr();
+if (data) {
+	const todosLosEstudiantes = data.estudiantes;
+	const todasLasMaterias = data.materias.materias;
+	rocFB(todasLasMaterias, todosLosEstudiantes);
+}
+
+module.exports = { rocFB };

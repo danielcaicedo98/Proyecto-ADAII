@@ -155,21 +155,23 @@ function rocFB(todasLasMaterias, todosLosEstudiantes) {
 		materiasSolicitadas,
 		todasLasMaterias
 	);
-
-	let respuestaEnTexto = "78\n";
+	let costo = calcularInstatisfaccion(mejorSolucion);
+	let respuestaEnTexto = costo.toFixed(4) + "\n";
 	let actualEstudiante = mejorSolucion[0].cod_estudiante;
 	let materiasAsignadas = [];
 	mejorSolucion.forEach((m) => {
-		if (m.cod_estudiante == actualEstudiante) {
-			materiasAsignadas.push(m);
-		} else {
-			respuestaEnTexto += `${m.cod_estudiante},${materiasAsignadas.length}\n`;
-			materiasAsignadas.forEach((m) => {
-				respuestaEnTexto += `${m.nombre_materia}\n`;
-			});
-			materiasAsignadas = [];
-			actualEstudiante = m.cod_estudiante;
-			materiasAsignadas.push(m);
+		if (m.asignada) {
+			if (m.cod_estudiante == actualEstudiante) {
+				materiasAsignadas.push(m);
+			} else {
+				respuestaEnTexto += `${m.cod_estudiante},${materiasAsignadas.length}\n`;
+				materiasAsignadas.forEach((m) => {
+					respuestaEnTexto += `${m.nombre_materia}\n`;
+				});
+				materiasAsignadas = [];
+				actualEstudiante = m.cod_estudiante;
+				materiasAsignadas.push(m);
+			}
 		}
 	});
 	fs.writeFileSync("salidas/salida.txt", respuestaEnTexto);

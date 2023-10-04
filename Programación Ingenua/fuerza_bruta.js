@@ -177,11 +177,11 @@ function rocFB(todasLasMaterias, todosLosEstudiantes) {
 	fs.writeFileSync("salidas/salida.txt", respuestaEnTexto);
 }
 
-const data = ReaderBr();
-if (data) {
-	const todosLosEstudiantes = data.estudiantes;
-	const todasLasMaterias = data.materias.materias;
-	rocFB(todasLasMaterias, todosLosEstudiantes);
-}
+// const data = ReaderBr();
+// if (data) {
+// 	const todosLosEstudiantes = data.estudiantes;
+// 	const todasLasMaterias = data.materias.materias;
+// 	rocFB(todasLasMaterias, todosLosEstudiantes);
+// }
 
 module.exports = { rocFB };

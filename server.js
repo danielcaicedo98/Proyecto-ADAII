@@ -1,8 +1,12 @@
 const { join } = require("path");
 const { readFileSync, writeFileSync } = require("fs");
 const http = require("http");
-const ReaderBr = require("./reader_br");
-const { rocFB } = require("./fuerza_bruta");
+const ReaderBr = require("./Programación Ingenua/reader_br");
+const { rocFB } = require("./Programación Ingenua/fuerza_bruta");
+const {
+	programacionVoraz,
+	cargarDatos,
+} = require("./Programación Voraz/Programacion_voraz");
 
 const servidor = http.createServer((req, res) => {
 	if (req.url === "/roc_fb" && req.method === "POST") {
@@ -14,12 +18,17 @@ const servidor = http.createServer((req, res) => {
 			datosCuerpo += chunk.toString();
 			writeFileSync("./entradas/entrada.txt", datosCuerpo);
 
-			const data = ReaderBr();
-			if (data) {
-				const todosLosEstudiantes = data.estudiantes;
-				const todasLasMaterias = data.materias.materias;
-				rocFB(todasLasMaterias, todosLosEstudiantes);
-			}
+			// const data = ReaderBr();
+			// if (data) {
+			// 	const todosLosEstudiantes = data.estudiantes;
+			// 	const todasLasMaterias = data.materias.materias;
+			// 	rocFB(todasLasMaterias, todosLosEstudiantes);
+			// }
+
+			const datos = cargarDatos();
+
+			//ejecuta la funcion principal
+			programacionVoraz(datos[0], datos[1]);
 		});
 
 		req.on("end", () => {

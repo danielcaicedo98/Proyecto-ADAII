@@ -1,6 +1,7 @@
 //Algoritmo Voraz para el ejercicio Reparticion Optima de Cupos
 
-const { Reader } = require("../Middleware/Reader");
+const Reader = require("./Reader.js");
+const fs = require("fs");
 
 
 //Carga los datos
@@ -11,6 +12,19 @@ function cargarDatos() {
         const estudiantesJSON = data.estudiantes;
         return [materiasJSON, estudiantesJSON];
     }
+}
+
+//escribe el resultado en salida.txt
+function escritura(costo, estudiantesMatriculados) {
+	let respuestaEnTexto = costo + "\n";
+	for (let e in estudiantesMatriculados) {
+        respuestaEnTexto += `${estudiantesMatriculados[e].nombre},${estudiantesMatriculados[e].materias_asignadas.length}\n`;
+        for (let m in estudiantesMatriculados[e].materias_asignadas) {
+            respuestaEnTexto += `${estudiantesMatriculados[e].materias_asignadas[m].nombre_materia}\n`;
+		}
+	}
+
+	fs.writeFileSync("salidas/salida.txt", respuestaEnTexto);
 }
 
 //Ordena los estudiantes de tal manera que las materias se ordenen de manera descendente por su prioridad, y los estudiantes de manera ascendente por su cantidad de materias
@@ -139,8 +153,7 @@ function partition(array, left, right, boolean, boolean2, materiasJSON) {
 }
 
 
-function matricularMaterias(materiasJSON, estudiantes) {
-    const estudiantesMatriculados = [];
+function matricularMaterias(materiasJSON, estudiantes, estudiantesMatriculados) {
     let contador = 0;
     let i = 0;
     console.log(estudiantes[0])
@@ -294,14 +307,22 @@ function calcularInsatisfaccionTotal(estudiantes) {
 //Ejecuta el programa
 function programacionVoraz(materiasJSON, estudiantesJSON) {
     //organiza los estudiantes
+    console.time(); 
+    const estudiantesMatriculados = [];
+
+
     ordenarJSON(estudiantesJSON, materiasJSON);
 
     //matricula las asignaturas
-    matricularMaterias(materiasJSON, estudiantesJSON.estudiantes);
+    matricularMaterias(materiasJSON, estudiantesJSON.estudiantes, estudiantesMatriculados);
 
     //calcular insatisfaccion
-    console.log(calcularInsatisfaccionTotal(estudiantesJSON.estudiantes));
+    const costo = calcularInsatisfaccionTotal(estudiantesJSON.estudiantes);
+    escritura(costo, estudiantesMatriculados);
+    console.timeEnd();
 }
+
+
 
 //Carga los datos 
 const datos = cargarDatos();

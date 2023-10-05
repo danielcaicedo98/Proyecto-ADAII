@@ -140,14 +140,14 @@ function calcularInstatisfaccion(variacion) {
 	return total; //promedio de insatisfacciones
 }
 function rocFB(todasLasMaterias, todosLosEstudiantes) {
-	const data = ReaderBr();
+	// const data = ReaderBr();
 
 	let materiasSolicitadas = todosLosEstudiantes.estudiantes.flatMap((est) => {
 		return est.materias_estudiante;
 	});
 	console.log(
 		"Materias :",
-		data.materias.materias.map((m) => [m.nombre, m.cupos])
+		todasLasMaterias.map((m) => [m.nombre, m.cupos])
 	);
 	console.log("solicitudes", materiasSolicitadas.length);
 
@@ -159,21 +159,27 @@ function rocFB(todasLasMaterias, todosLosEstudiantes) {
 	let respuestaEnTexto = costo.toFixed(4) + "\n";
 	let actualEstudiante = mejorSolucion[0].cod_estudiante;
 	let materiasAsignadas = [];
-	mejorSolucion.forEach((m) => {
-		if (m.asignada) {
-			if (m.cod_estudiante == actualEstudiante) {
-				materiasAsignadas.push(m);
-			} else {
-				respuestaEnTexto += `${m.cod_estudiante},${materiasAsignadas.length}\n`;
-				materiasAsignadas.forEach((m) => {
-					respuestaEnTexto += `${m.nombre_materia}\n`;
-				});
-				materiasAsignadas = [];
-				actualEstudiante = m.cod_estudiante;
-				materiasAsignadas.push(m);
-			}
+
+	for (let m of mejorSolucion) {
+		if (m.cod_estudiante == actualEstudiante) {
+			m.asignada && materiasAsignadas.push(m);
+		} else {
+			//console.log("materiasAsignadas", materiasAsignadas);
+
+			respuestaEnTexto += `${actualEstudiante},${materiasAsignadas.length}\n`;
+			materiasAsignadas.forEach((m) => {
+				respuestaEnTexto += `${m.nombre_materia}\n`;
+			});
+			materiasAsignadas = [];
+			actualEstudiante = m.cod_estudiante;
+			m.asignada && materiasAsignadas.push(m);
 		}
+	}
+	respuestaEnTexto += `${actualEstudiante},${materiasAsignadas.length}\n`;
+	materiasAsignadas.forEach((m) => {
+		respuestaEnTexto += `${m.nombre_materia}\n`;
 	});
+
 	fs.writeFileSync("salidas/salida.txt", respuestaEnTexto);
 }
 

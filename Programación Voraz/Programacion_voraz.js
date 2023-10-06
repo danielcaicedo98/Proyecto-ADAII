@@ -1,6 +1,6 @@
 //Algoritmo Voraz para el ejercicio Reparticion Optima de Cupos
 
-const Reader = require("/Reader.js");
+const Reader = require("./Reader");
 const fs = require("fs");
 
 
@@ -24,7 +24,7 @@ function escritura(costo, estudiantesMatriculados) {
 		}
 	}
 
-	fs.writeFileSync("salidas/salida.txt", respuestaEnTexto);
+	fs.writeFileSync("../salidas/salida.txt", respuestaEnTexto);
 }
 
 //Ordena los estudiantes de tal manera que las materias se ordenen de manera descendente por su prioridad, y los estudiantes de manera ascendente por su cantidad de materias
@@ -384,4 +384,5 @@ function programacionVoraz(materiasJSON, estudiantesJSON) {
 module.exports = {
 	programacionVoraz,
 	cargarDatos,
+    escritura
 };

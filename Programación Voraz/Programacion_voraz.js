@@ -1,6 +1,8 @@
 //Algoritmo Voraz para el ejercicio Reparticion Optima de Cupos
 
-const { Reader } = require("./Reader");
+const Reader = require("/Reader.js");
+const fs = require("fs");
+
 
 //Carga los datos
 function cargarDatos() {
@@ -10,6 +12,19 @@ function cargarDatos() {
 		const estudiantesJSON = data.estudiantes;
 		return [materiasJSON, estudiantesJSON];
 	}
+}
+
+//escribe el resultado en salida.txt
+function escritura(costo, estudiantesMatriculados) {
+	let respuestaEnTexto = costo + "\n";
+	for (let e in estudiantesMatriculados) {
+        respuestaEnTexto += `${estudiantesMatriculados[e].nombre},${estudiantesMatriculados[e].materias_asignadas.length}\n`;
+        for (let m in estudiantesMatriculados[e].materias_asignadas) {
+            respuestaEnTexto += `${estudiantesMatriculados[e].materias_asignadas[m].nombre_materia}\n`;
+		}
+	}
+
+	fs.writeFileSync("salidas/salida.txt", respuestaEnTexto);
 }
 
 //Ordena los estudiantes de tal manera que las materias se ordenen de manera descendente por su prioridad, y los estudiantes de manera ascendente por su cantidad de materias
@@ -162,16 +177,15 @@ function partition(array, left, right, boolean, boolean2, materiasJSON) {
 	return i + 1;
 }
 
-function matricularMaterias(materiasJSON, estudiantes) {
-	const estudiantesMatriculados = [];
-	let contador = 0;
-	let i = 0;
-	console.log(estudiantes[0]);
-	//bucle hasta que todas las materias ocupen todos los cupos o se acaben las materias de los estudiantes
-	while (contador != materiasJSON.numero_materias) {
-		//condicional cuando el estudiante se quede sin materias siga al siguiente
-		if (estudiantes[i].materias_estudiante[0]) {
-			let cantidadAnteriorMaterias = estudiantes[i].materias_estudiante.length;
+function matricularMaterias(materiasJSON, estudiantes, estudiantesMatriculados) {
+    let contador = 0;
+    let i = 0;
+    console.log(estudiantes[0])
+    //bucle hasta que todas las materias ocupen todos los cupos o se acaben las materias de los estudiantes
+    while (contador != materiasJSON.numero_materias) {
+        //condicional cuando el estudiante se quede sin materias siga al siguiente
+        if (estudiantes[i].materias_estudiante[0]) {
+            let cantidadAnteriorMaterias = estudiantes[i].materias_estudiante.length
 
 			//Recorrera las materias
 			for (x = 0; x < materiasJSON.materias.length; x++) {
@@ -344,15 +358,23 @@ function calcularInsatisfaccionTotal(estudiantes) {
 
 //Ejecuta el programa
 function programacionVoraz(materiasJSON, estudiantesJSON) {
-	//organiza los estudiantes
-	ordenarJSON(estudiantesJSON, materiasJSON);
+    //organiza los estudiantes
+    console.time(); 
+    const estudiantesMatriculados = [];
 
-	//matricula las asignaturas
-	matricularMaterias(materiasJSON, estudiantesJSON.estudiantes);
 
-	//calcular insatisfaccion
-	console.log(calcularInsatisfaccionTotal(estudiantesJSON.estudiantes));
+    ordenarJSON(estudiantesJSON, materiasJSON);
+
+    //matricula las asignaturas
+    matricularMaterias(materiasJSON, estudiantesJSON.estudiantes, estudiantesMatriculados);
+
+    //calcular insatisfaccion
+    const costo = calcularInsatisfaccionTotal(estudiantesJSON.estudiantes);
+    escritura(costo, estudiantesMatriculados);
+    console.timeEnd();
 }
+
+
 
 //Carga los datos
 // const datos = cargarDatos();

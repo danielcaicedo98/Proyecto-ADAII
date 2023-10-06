@@ -18,25 +18,25 @@ const servidor = http.createServer((req, res) => {
 			// Recopilar datos del cuerpo de la solicitud
 			datosCuerpo += chunk;
 			
-			// const data = ReaderBr();
-			// if (data) {
-				// 	const todosLosEstudiantes = data.estudiantes;
-				// 	const todasLasMaterias = data.materias.materias;
-				// 	rocFB(todasLasMaterias, todosLosEstudiantes);
-				// }
+			
 			const cuerpoJson = JSON.parse(datosCuerpo);
-				
+
 			// Accede a las propiedades del JSON
 			const opcion = cuerpoJson.opcion;
 			const texto = cuerpoJson.texto;
 			writeFileSync("./entradas/entrada.txt", texto);
-			if(opcion == '1'){
-
-			}else if (opcion == '2'){
-
-			}else if (opcion == '3'){
+			if (opcion == "1") {
+			} else if (opcion == "2") {
+				console.log("opcion 2, ingenua");
+				const data = ReaderBr();
+				if (data) {
+					const todosLosEstudiantes = data.estudiantes;
+					const todasLasMaterias = data.materias.materias;
+					rocFB(todasLasMaterias, todosLosEstudiantes);
+				}
+			} else if (opcion == "3") {
 				const datos = cargarDatos();
-				
+
 				//ejecuta la funcion principal
 				programacionVoraz(datos[0], datos[1]);
 			}

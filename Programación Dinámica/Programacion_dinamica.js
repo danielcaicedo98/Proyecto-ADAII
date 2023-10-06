@@ -1,3 +1,4 @@
+const fs = require('fs'); 
 const { log } = require("console");
 const { Reader } = require("../Middleware/Reader");
 
@@ -19,8 +20,9 @@ const columnas = estudiantesJSON.numero_estudiantes;
 const miMatriz = [];
 
 let materias_asignadas = eliminarElementosRepetidos(llenarMatriz(miMatriz,filas,columnas,estados))
- log(materias_asignadas)
-function eliminarElementosRepetidos(arregloDeArreglos) {
+//log(materias_asignadas)
+
+ function eliminarElementosRepetidos(arregloDeArreglos) {
   const elementosUnicos = new Set();
   const resultado = [];
 
@@ -145,7 +147,6 @@ function solicitudEstudiantes(jsonMaterias, jsonEstudiantes) {
         });
       }
     }
-  
     return jsonEstudiantes;
 }
 
@@ -412,7 +413,15 @@ function llenarMatriz(matriz, filas, columnas,_estados) {
 }
   return indice_materias
 }
-log(materiasJSON.materias)
+const tiempoInicio = performance.now();
+
+//log(materiasJSON.materias)
+const resultado = materiasJSON.materias; // Reemplaza esto con tu resultado real
+
+const tiempoFinal = performance.now();
+const tiempoTranscurrido = tiempoFinal - tiempoInicio;
+fs.writeFileSync("salida.txt", JSON.stringify(resultado, null, 2), "utf-8");
+
 
 function indiceMayorCero(arregloDeVectores) {
   const resultados = [];

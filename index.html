@@ -89,7 +89,7 @@
                     headers: {
                         'Content-Type': 'text/plain',
                     },
-                    body: textoEntrada,
+                    body: JSON.stringify({opcion: opcion, texto: textoEntrada}),
                 });
                 document.querySelector("#cargando").innerHTML = '';
 

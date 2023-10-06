@@ -1,6 +1,6 @@
 //Algoritmo Voraz para el ejercicio Reparticion Optima de Cupos
 
-const { Reader } = require("../Middleware/Reader");
+const { Reader } = require("./Reader");
 
 //Carga los datos
 function cargarDatos() {

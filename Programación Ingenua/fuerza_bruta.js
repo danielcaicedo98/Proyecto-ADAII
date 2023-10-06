@@ -150,11 +150,13 @@ function rocFB(todasLasMaterias, todosLosEstudiantes) {
 		todasLasMaterias.map((m) => [m.nombre, m.cupos])
 	);
 	console.log("solicitudes", materiasSolicitadas.length);
-
+	
+	console.time("Ingenua");
 	const mejorSolucion = calcularMejorSolucion(
 		materiasSolicitadas,
 		todasLasMaterias
 	);
+	console.timeEnd("Ingenua");
 	let costo = calcularInstatisfaccion(mejorSolucion);
 	let respuestaEnTexto = costo.toFixed(4) + "\n";
 	let actualEstudiante = mejorSolucion[0].cod_estudiante;

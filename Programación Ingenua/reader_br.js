@@ -1,7 +1,7 @@
 const { join } = require("path");
 const { readFileSync } = require("fs");
 
-function ReaderBr(nombreArchivo) {
+function ReaderBr() {
 	try {
 		const filePath = "./entradas/entrada.txt"; //join("./", "e_3_5_5.roc"); // Ruta relativa a input.txt
 		const contenido = readFileSync(filePath, "utf-8");

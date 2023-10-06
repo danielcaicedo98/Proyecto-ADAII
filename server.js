@@ -1,8 +1,13 @@
 const { join } = require("path");
 const { readFileSync, writeFileSync } = require("fs");
 const http = require("http");
-const ReaderBr = require("./reader_br");
-const { rocFB } = require("./fuerza_bruta");
+const ReaderBr = require("./Programación Ingenua/reader_br");
+const { rocFB } = require("./Programación Ingenua/fuerza_bruta");
+const {
+	programacionVoraz,
+	cargarDatos,
+	escritura,
+} = require("./Programación Voraz/Programacion_voraz");
 
 const servidor = http.createServer((req, res) => {
 	if (req.url === "/roc_fb" && req.method === "POST") {
@@ -11,14 +16,29 @@ const servidor = http.createServer((req, res) => {
 
 		req.on("data", (chunk) => {
 			// Recopilar datos del cuerpo de la solicitud
-			datosCuerpo += chunk.toString();
-			writeFileSync("./entradas/entrada.txt", datosCuerpo);
+			datosCuerpo += chunk;
+			
+			
+			const cuerpoJson = JSON.parse(datosCuerpo);
 
-			const data = ReaderBr();
-			if (data) {
-				const todosLosEstudiantes = data.estudiantes;
-				const todasLasMaterias = data.materias.materias;
-				rocFB(todasLasMaterias, todosLosEstudiantes);
+			// Accede a las propiedades del JSON
+			const opcion = cuerpoJson.opcion;
+			const texto = cuerpoJson.texto;
+			writeFileSync("./entradas/entrada.txt", texto);
+			if (opcion == "1") {
+			} else if (opcion == "2") {
+				console.log("opcion 2, ingenua");
+				const data = ReaderBr();
+				if (data) {
+					const todosLosEstudiantes = data.estudiantes;
+					const todasLasMaterias = data.materias.materias;
+					rocFB(todasLasMaterias, todosLosEstudiantes);
+				}
+			} else if (opcion == "3") {
+				const datos = cargarDatos();
+
+				//ejecuta la funcion principal
+				programacionVoraz(datos[0], datos[1]);
 			}
 		});
 

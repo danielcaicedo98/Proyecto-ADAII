@@ -11,6 +11,11 @@
 <body>
     <div class="contenedor">
         <h1>Proyecto 1 - ADAII</h1>
+        <select id="opcion" required class="select">
+            <option value="1">Programacion Dinamica</option>
+            <option value="2">Programacion Ingenua</option>
+            <option value="3">Programacion Voraz</option>
+        </select>
         <textarea id="textoEntrada" class="textareaPersonalizado" rows="10" cols="50"></textarea>
         <button onclick="calcular()" class="botonCalcular">Calcular</button>
         <br>
@@ -58,6 +63,17 @@
             font-size: 16px;
         }
 
+        .select {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
         .botonCalcular:hover {
             background-color: #45a049;
         }
@@ -65,7 +81,7 @@
     <script>
         async function calcular() {
             const textoEntrada = document.getElementById('textoEntrada').value;
-
+            const opcion = document.getElementById('opcion').value;
             try {
                 document.querySelector("#cargando").innerHTML = 'Cargando...';
                 const respuesta = await fetch('/roc_fb', {
@@ -73,7 +89,7 @@
                     headers: {
                         'Content-Type': 'text/plain',
                     },
-                    body: textoEntrada,
+                    body: JSON.stringify({opcion: opcion, texto: textoEntrada}),
                 });
                 document.querySelector("#cargando").innerHTML = '';
 

@@ -24,7 +24,7 @@ function escritura(costo, estudiantesMatriculados) {
 		}
 	}
 
-	fs.writeFileSync("../salidas/salida.txt", respuestaEnTexto);
+	fs.writeFileSync("salidas/salida.txt", respuestaEnTexto);
 }
 
 //Ordena los estudiantes de tal manera que las materias se ordenen de manera descendente por su prioridad, y los estudiantes de manera ascendente por su cantidad de materias
@@ -180,7 +180,6 @@ function partition(array, left, right, boolean, boolean2, materiasJSON) {
 function matricularMaterias(materiasJSON, estudiantes, estudiantesMatriculados) {
     let contador = 0;
     let i = 0;
-    console.log(estudiantes[0])
     //bucle hasta que todas las materias ocupen todos los cupos o se acaben las materias de los estudiantes
     while (contador != materiasJSON.numero_materias) {
         //condicional cuando el estudiante se quede sin materias siga al siguiente

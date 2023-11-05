@@ -8,6 +8,8 @@ const {
 	cargarDatos,
 	escritura,
 } = require("./Programación Voraz/Programacion_voraz");
+const { Dinamica, carga_datos } = require("./ProgramacionDinamica/Dinamica");
+
 
 const servidor = http.createServer((req, res) => {
 	if (req.url === "/roc_fb" && req.method === "POST") {
@@ -26,6 +28,8 @@ const servidor = http.createServer((req, res) => {
 			const texto = cuerpoJson.texto;
 			writeFileSync("./entradas/entrada.txt", texto);
 			if (opcion == "1") {
+				const datos = carga_datos();
+				Dinamica(datos[0], datos[1])
 			} else if (opcion == "2") {
 				console.log("opcion 2, ingenua");
 				const data = ReaderBr();
